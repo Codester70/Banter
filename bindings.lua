@@ -1,0 +1,2 @@
+BINDING_HEADER_BANTER = "Banter"
+BINDING_NAME_BANTER_SPEAK = "Speak (Contextual)"

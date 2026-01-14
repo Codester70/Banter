@@ -1,0 +1,21 @@
+## Interface: 110000
+## Title: Banter
+## Notes: Contextual /say banter with macro-callable endpoints
+## Author: Cody + V
+## Version: 0.1.4
+## Bindings: Bindings.xml
+## IconTexture: Interface\Icons\INV_Misc_Note_01
+## SavedVariables: BanterDB
+
+lines.lua
+pools.lua
+place.lua
+target.lua
+tokens.lua
+state.lua
+speech.lua
+ui.lua
+macrobuttons.lua
+bindings.lua
+banter_config.lua
+core.lua

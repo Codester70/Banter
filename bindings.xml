@@ -1,0 +1,5 @@
+<Bindings>
+  <Binding name="BANTER_SPEAK" header="BANTER" category="ADDONS" default="CTRL-SHIFT-B">
+    Banter.Speech:SpeakContextual();
+  </Binding>
+</Bindings>
