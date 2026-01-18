@@ -19,10 +19,10 @@ Banter.Speech = {
     _macroLastSpoke = {},
 }
 
-local function say(line)
-    if not line or line == "" then return end
-    -- Always /say per your requirement
-    C_ChatInfo.SendChatMessage(line, "SAY")
+local function say(text)
+    if not text or text == "" then return end
+
+    C_ChatInfo.SendChatMessage(text, "SAY")
 end
 
 
@@ -64,6 +64,26 @@ local function stripFactionTag(line)
     return line:gsub("^%[%u+%]%s*", "")
 end
 
+local function matchesWeatherTag(line)
+    if not line then return true end
+
+    local tag = line:match("^%[WEATHER:(%u+)%]")
+    if not tag then
+        return true -- no weather tag = always allowed
+    end
+
+    local weather = Banter.GetWeather and Banter:GetWeather()
+    if not weather then
+        return false -- line requires weather but none exists
+    end
+
+    return tag == weather.type
+end
+
+local function stripWeatherTag(line)
+    return line:gsub("^%[WEATHER:%u+%]%s*", "")
+end
+
 function Banter.Speech:PickContextCategory()
     local st = Banter.State
     local c = Banter.Constants
@@ -90,12 +110,6 @@ local function hasUsableTarget()
     if t.isDead then return false end
     if t.isSelf then return false end
     return true
-end
-
-local function hasLivingEnemyTarget()
-    return UnitExists("target")
-        and not UnitIsDeadOrGhost("target")
-        and UnitCanAttack("player", "target")
 end
 
 local function hasLivingEnemy(unit)
@@ -165,7 +179,10 @@ function Banter.Speech:SpeakContextual()
         end
 
         local tries = 0
-        while line and not matchesFactionTag(line) and tries < 5 do
+        while line
+            and (not matchesFactionTag(line) or not matchesWeatherTag(line))
+            and tries < 5
+        do
             tries = tries + 1
             line = Banter.PoolManager:GetNextLine(idleCat)
         end
@@ -173,9 +190,14 @@ function Banter.Speech:SpeakContextual()
         if not line then return end
 
         line = stripFactionTag(line)
+        line = stripWeatherTag(line)
 
         if tryEmoteTaggedLine(line) then
             return
+        end
+
+        if Banter.IsDwarvenRace and Banter:IsDwarvenRace() and Banter.Scottishify then
+            line = Banter.Scottishify(line)
         end
 
         say(line)

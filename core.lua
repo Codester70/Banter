@@ -3,6 +3,14 @@
 
 Banter = Banter or {}
 
+function Banter:Debug(msg)
+    if not BanterDB then return end
+    msg = msg or "nil"
+
+    DEFAULT_CHAT_FRAME:AddMessage(
+        "|cffb48efcBanter:|r " .. tostring(msg)
+    )
+end
 
 local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")
@@ -31,6 +39,7 @@ f:SetScript("OnEvent", function(_, event, addonName)
     if BanterDB.speech.chance_defensive == nil then BanterDB.speech.chance_defensive = 20 end
     if BanterDB.speech.chance_burst == nil then BanterDB.speech.chance_burst = 20 end
     if BanterDB.speech.chance_idle_emote == nil then BanterDB.speech.chance_idle_emote = 15 end
+    BanterDB.debug = BanterDB.debug or false
 
     -- Settings panel
     if Banter.Settings and Banter.Settings.Init then

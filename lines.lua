@@ -16,12 +16,19 @@ Banter.LinePools = {
         "That all you've got?",
         "You're done!",
         "Big mistake!",
-        "I warned you!",
+        "I warned you, %t!",
         "How do you like that, %t?",
         "You want some more?",
         "Taste my wrath!",
         "Feel my fury!",
-        "Die, %t!"
+        "Die, %t!",
+        "Ooh! Right in the face!",
+        "That's going to leave a mark!",
+        "Say goodnight, %t!",
+        "Lights out!",
+        "[ALLIANCE] For the Alliance!",
+        "[HORDE] For the Horde!",
+        "@EMOTE:ROAR"
     },
 
     INTERRUPT = {
@@ -105,6 +112,14 @@ Banter.LinePools = {
         "I can't take many more!",
         "This is close!",
         "Barely holding!",
+        "Is this my blood?",
+        "I need help!",
+        "Ack!",
+        "Ugh!",
+        "Oof!",
+        "Yikes!",
+        "Argh!",
+        "Gah!"
     },
 
     VICTORY = {
@@ -124,7 +139,8 @@ Banter.LinePools = {
         "Yes!",
         "Piece of cake!",
         "Well fought!",
-        "That'll do!"
+        "That'll do!",
+        "That's how we do it!"
     },
 
     IDLE_GENERIC = {
@@ -149,6 +165,12 @@ Banter.LinePools = {
         "Why are there so many rats in this place?",
         "My allergies are acting up again.",
 
+        "[WEATHER:RAIN] This rain never lets up, does it?",
+        "[WEATHER:SNOW] Snow like this makes everything quieter.",
+        "[WEATHER:STORM] Storm's got a temper today.",
+        "It's weather like this that makes you think.",
+        "Never trust the {weather} to stay the same.",
+
         "@EMOTE:SIGH",
         "@EMOTE:STRETCH",
         "@EMOTE:YAWN",
@@ -164,7 +186,7 @@ Banter.LinePools = {
         "[ALLIANCE] Stormwind may be loud, but at least it's civilized.",
         "[ALLIANCE] Watch your back around here. Horde spies have been known to lurk about.",
         "[ALLIANCE] I hear the Horde has been making trouble near {randomplace}.",
-        "[ALLIANCE] The Horde thinks they can just take what they want.",
+        "[ALLIANCE] The Horde think they can just take what they want.",
         "[ALLIANCE] Some forsaken left a maggot on the barstool at the tavern. Disgusting.",
         "[ALLIANCE] I wish orcs bathed more often.",
         "[ALLIANCE] Horde and table manners—never the two shall meet.",
@@ -207,7 +229,7 @@ Banter.LinePools = {
 
     IDLE_TARGET_PLAYER_FRIENDLY = {
         "{target} looks like {theyve} seen some things.",
-        "You doing alright, {target}?",
+        "Hail, {target}!",
         "Something tells me {target} knows what {they}'re doing.",
         "{target} carries {themself} like a veteran.",
         "If {target} says run, I'm running.",
@@ -229,7 +251,6 @@ Banter.LinePools = {
         "@EMOTE:SMILE",
         "@EMOTE:PONDER",
         "@EMOTE:WAVE"
-
     },
 
     IDLE_TARGET_PLAYER_HOSTILE = {
@@ -240,10 +261,12 @@ Banter.LinePools = {
         "I've got my eye on you, {target}.",
         "{target} is itching for a mistake.",
         "Don't start something, {target}.",
-        "This one feels personal already: {target}.",
+        "Don't cross me, {target}.",
         "{target} is watching us. Let {them}.",
         "I'm not looking for a fight… but {target} might be.",
         "{target}'s got those beady eyes.",
+        "I smell something foul, and I think it's {target}.",
+        "Something about {target} puts me on edge.",
         "@EMOTE:GLARE",
         "@EMOTE:SCOWL",
         "@EMOTE:STARE",

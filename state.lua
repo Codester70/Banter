@@ -82,6 +82,21 @@ function Banter:IsDisabledByGroup()
   return false
 end
 
+function Banter:IsDwarvenRace()
+    local raceName, raceFile = UnitRace("player")
+    -- raceFile is usually stable-ish; raceName is localized. We'll use both defensively.
+    local rf = (raceFile or ""):lower()
+    local rn = (raceName or ""):lower()
+
+    local dwarf = rf:find("dwarf", 1, true)
+    local earthen = false--rf:find("earthen", 1, true)
+
+    -- Covers Dwarf / Dark Iron Dwarf / Earthen (and future “dwarf-ish” strings)
+    if dwarf or earthen then return true end
+
+    return false
+end
+
 function Banter:GetPlayerFaction()
     local faction = UnitFactionGroup("player")
     if faction == "Alliance" then
@@ -89,5 +104,31 @@ function Banter:GetPlayerFaction()
     elseif faction == "Horde" then
         return "HORDE"
     end
+    return nil
+end
+
+function Banter:GetWeather()
+    -- Retail clients have been migrating/removing globals. Guard everything.
+    local fn = _G.GetZoneWeatherInfo
+    if type(fn) == "function" then
+        local weatherType, intensity = fn()
+        if not weatherType then return nil end
+        return {
+            type = tostring(weatherType):upper(),
+            intensity = intensity or 0,
+        }
+    end
+
+    -- Try likely namespaced alternatives (if Blizzard added one)
+    if _G.C_Weather and type(_G.C_Weather.GetZoneWeatherInfo) == "function" then
+        local weatherType, intensity = _G.C_Weather.GetZoneWeatherInfo()
+        if not weatherType then return nil end
+        return {
+            type = tostring(weatherType):upper(),
+            intensity = intensity or 0,
+        }
+    end
+
+    -- No weather API available on this client/build
     return nil
 end

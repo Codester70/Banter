@@ -8,6 +8,11 @@ local function safe(v, fallback)
 	return v
 end
 
+local function gsub_word(text, from, to)
+	-- whole-word replacement only (prevents "you" inside "young")
+	return text:gsub("(%f[%a])" .. from .. "(%f[^%a])", "%1" .. to .. "%2")
+end
+
 local function getRandomPlace()
 	local list = Banter.RandomPlaces
 	if not list or #list == 0 then
@@ -18,6 +23,16 @@ end
 
 function Banter.FormatTokens(text)
 	if not text or text == "" then return text end
+
+	local weatherText = nil
+	if text:find("{weather}") then
+		local weather = Banter.GetWeather and Banter:GetWeather()
+		if weather then
+			weatherText = weather.type:lower()
+		else
+			weatherText = "the weather"
+		end
+	end
 
 	-- Place info
 	local info = Banter.GetPlaceInfo and Banter.GetPlaceInfo() or nil
@@ -69,5 +84,83 @@ function Banter.FormatTokens(text)
 		text = text:gsub("{randomplace}", randomPlace)
 	end
 
+	if weatherText then
+		text = text:gsub("{weather}", weatherText)
+	end
+
 	return text
 end
+
+local function Scottishify(text)
+	if not text or text == "" then return text end
+
+	-- Work on a copy
+	local t = text
+
+	-- Phrase swaps first (more specific before more general)
+	t = t:gsub("(%f[%a])you are(%f[^%a])", "%1ye are%2")
+	t = t:gsub("(%f[%a])i am(%f[^%a])", "%1ah am%2")
+
+	-- Contractions / common words (lowercase only; we keep it simple & readable)
+	t = gsub_word(t, "don't", "dinnae")
+	t = gsub_word(t, "can't", "cannae")
+	t = gsub_word(t, "won't", "winnae")
+	t = gsub_word(t, "isn't", "isnae")
+	t = gsub_word(t, "doesn't", "doesnae")
+	t = gsub_word(t, "couldn't", "couldnae")
+	t = gsub_word(t, "shouldn't", "shouldnae")
+	t = gsub_word(t, "wouldn't", "wouldnae")
+	t = gsub_word(t, "won't", "winnae")
+	t = gsub_word(t, "not", "no'")
+	t = gsub_word(t, "nothing", "nae thin'")
+	t = gsub_word(t, "your", "yer")
+	t = gsub_word(t, "you", "ye")
+	t = gsub_word(t, "my", "me")
+	t = gsub_word(t, "to", "tae")
+	t = gsub_word(t, "of", "o'")
+	t = gsub_word(t, "and", "an'")
+	t = gsub_word(t, "for", "fer")
+
+	-- Drop trailing "g" in gerunds: "walking" -> "walkin'"
+	-- Avoid words where "ing" is part of the root (e.g., "spring").
+	local ingExceptions = {
+		spring = true,
+		thing  = true,
+		king   = true,
+		ring   = true,
+		wing   = true,
+		sing   = true,
+		bring  = true, -- not a gerund
+		sting  = true,
+		sling  = true,
+		fling  = true,
+		swing = true
+	}
+
+	t = t:gsub("(%f[%a])([A-Za-z]+)(%f[^%a])", function(prefix, word, suffix)
+		-- NOTE: prefix/suffix are empty strings from frontier captures; we return them unchanged.
+		local lower = word:lower()
+
+		-- Only transform words ending in "ing"
+		if not lower:match("ing$") then
+			return prefix .. word .. suffix
+		end
+
+		-- Exclude common false positives like "spring"
+		if ingExceptions[lower] then
+			return prefix .. word .. suffix
+		end
+
+		-- Require at least 4 letters before "ing" (helps avoid oddities)
+		local stem = word:sub(1, -4) -- remove "ing"
+		if #stem < 4 then
+			return prefix .. word .. suffix
+		end
+
+		return prefix .. stem .. "in'" .. suffix
+	end)
+
+	return t
+end
+
+Banter.Scottishify = Scottishify
